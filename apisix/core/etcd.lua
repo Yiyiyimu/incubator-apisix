@@ -36,6 +36,7 @@ local function new()
     etcd_conf.host = nil
     etcd_conf.prefix = nil
     etcd_conf.protocol = "v3"
+    etcd_conf.api_prefix = "/v3"
 
     local etcd_cli
     etcd_cli, err = etcd.new(etcd_conf)
@@ -75,7 +76,7 @@ local function not_found(res)
 end
 
 
-function _M.get_format(res, realkey)
+function _M.get_format(res)
     if res.body.error == "etcdserver: user name is empty" then
         return nil, "insufficient credentials code: 401"
     end
@@ -135,7 +136,7 @@ function _M.get(key)
         return nil, err
     end
 
-    return _M.get_format(res, prefix .. key)
+    return _M.get_format(res)
 end
 
 

@@ -71,7 +71,7 @@ local function getkey(etcd_cli, key)
         return nil, "failed to get key from etcd"
     end
 
-    res, err = etcd_apisix.get_format(res, key)
+    res, err = etcd_apisix.get_format(res)
     if not res then
         return nil, err
     end
@@ -416,6 +416,7 @@ local function _automatic_fetch(premature, self)
         return
     end
 
+    self.etcd_conf.api_prefix = "/v3"
     local etcd_cli, _, err = etcd.new(self.etcd_conf)
     if not etcd_cli then
         error("failed to start a etcd instance: " .. err)
@@ -474,6 +475,7 @@ function _M.new(key, opts)
     etcd_conf.host = nil
     etcd_conf.prefix = nil
     etcd_conf.protocol = "v3"
+    etcd_conf.api_prefix = "/v3"
 
     local automatic = opts and opts.automatic
     local item_schema = opts and opts.item_schema
